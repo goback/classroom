@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="referrer" content="no-referrer">
+  <meta name="description" content="해밀리 앱 실행과 스토어 이동을 휴대폰에서 확인하는 테스트 페이지입니다.">
+  <meta property="og:title" content="해밀리 앱 연결 테스트">
+  <meta property="og:description" content="해밀리 Dev 실행과 스토어 이동을 확인해 보세요.">
+  <meta property="og:type" content="website">
+  <title>해밀리 · 앱 연결 테스트</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.mjs"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="wordmark"><span class="mark" aria-hidden="true">H</span><span>해밀리헬스</span><span class="tag">연결 테스트</span></div>
+      <p class="eyebrow">APP LINK TEST</p>
+      <h1>앱으로 연결해 볼까요?</h1>
+      <p class="intro">휴대폰에서 앱 실행과 스토어 이동을<br class="mobile-break"> 각각 확인해 보세요.</p>
+    </header>
+
+    <section class="card" aria-label="앱 연결 시험">
+      <div class="section-label">01 <span>테스트할 앱</span></div>
+      <div class="dev-app"><span><strong>해밀리 Dev</strong><small>휴대폰에 설치한 개발용 앱</small></span><span class="dev-badge">DEV</span></div>
+      <p id="app-note" class="note">개발앱은 스토어에 없습니다. 스토어 버튼은 운영앱으로 연결됩니다.</p>
+
+      <div class="device-row"><span>현재 기기</span><strong id="device">확인 중…</strong></div>
+      <p id="desktop-note" class="device-note" hidden>휴대폰에서 아래 테스트 링크를 열면 앱 실행 버튼을 사용할 수 있습니다.</p>
+
+      <div class="section-label actions-title">02 <span>연결 확인</span></div>
+      <button type="button" id="open-app" class="button primary" disabled><span>앱에서 열기</span><span aria-hidden="true">↗</span></button>
+      <button type="button" id="connect" class="button secondary" disabled><span>앱 실행 + 스토어 전환 시험</span><span aria-hidden="true">→</span></button>
+      <p id="fallback-note" class="note">자동 전환 시험은 앱 설치 여부를 정확히 판별하는 기능이 아닙니다.</p>
+      <button type="button" id="cancel" class="text-button" hidden>예약된 스토어 이동 취소</button>
+
+      <div class="stores" aria-label="스토어 직접 열기">
+        <a id="android-store" href="https://play.google.com/store/apps/details?id=com.hemilyHealth.app" class="store-link">Google Play <span aria-hidden="true">↗</span></a>
+        <a id="ios-store" href="https://apps.apple.com/kr/app/id6804555560" class="store-link">App Store <span aria-hidden="true">↗</span></a>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite">버튼을 눌러 연결을 확인해 주세요.</p>
+    </section>
+
+    <section class="card share-card" aria-label="테스트 링크 공유">
+      <div class="section-label">03 <span>다른 앱에서도 테스트</span></div>
+      <p class="share-intro">링크를 복사해 메시지나 다른 앱에서 열어 보세요.</p>
+      <label class="toggle"><input type="checkbox" id="auto"><span>링크를 열면 자동 연결 시험</span></label>
+      <p class="note">켜면 페이지가 열릴 때 앱 실행과 스토어 전환을 시도합니다. 브라우저가 자동 실행을 막으면 버튼을 눌러 주세요.</p>
+      <label for="share-url" class="sr-only">공유할 테스트 주소</label>
+      <input id="share-url" class="url-input" type="url" readonly spellcheck="false">
+      <button type="button" id="copy" class="button secondary copy-button">테스트 링크 복사</button>
+      <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <details class="details">
+      <summary>테스트 범위와 연결 기록</summary>
+      <p>앱의 홈 또는 로그인 화면이 나타나면 앱 실행은 확인된 것입니다. 특정 강의로 이동하는 기능과 HTTPS 주소가 앱을 직접 여는 기능은 이번 페이지에 연결하지 않았습니다.</p>
+      <p>iPhone에서 자동 전환 시험을 누르면, 페이지가 계속 보일 때 약 3초 뒤 App Store로 이동합니다. 실행 확인창에서 기다리거나 브라우저가 실행을 막아도 스토어로 갈 수 있습니다.</p>
+      <dl><dt>앱 실행 주소</dt><dd><code id="app-url"></code></dd><dt>연결 기록</dt><dd><ol id="events" class="event-log"></ol></dd></dl>
+    </details>
+    <footer>해밀리헬스 · 앱 실행 및 스토어 연결 시험</footer>
+    <noscript><p class="status">이 테스트에는 JavaScript가 필요합니다. 스토어 링크는 위에서 직접 열 수 있습니다.</p></noscript>
+  </main>
+</body>
+</html>
