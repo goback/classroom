@@ -1,4 +1,4 @@
-import { APP, STORES, appUrl, autoFromUrl, createLauncher, detectPlatform, shareUrl, videoIdFromUrl } from './links.mjs?v=20261028-dynamic-id';
+import { APP, STORES, appUrl, autoFromUrl, createLauncher, detectPlatform, shareUrl, videoIdFromUrl } from './links.mjs?v=20261028-clean-link';
 
 const byId = (id) => document.getElementById(id);
 const platform = detectPlatform(navigator);

@@ -50,7 +50,7 @@ export function shareUrl(currentUrl, auto) {
   url.search = '';
   url.hash = '';
   url.searchParams.set('videoId', videoId);
-  url.searchParams.set('auto', auto ? '1' : '0');
+  if (!auto) url.searchParams.set('auto', '0');
   return url.href;
 }
 
