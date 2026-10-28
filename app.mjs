@@ -1,7 +1,8 @@
-import { APP, STORES, appUrl, createLauncher, detectPlatform, shareUrl } from './links.mjs';
+import { APP, STORES, appUrl, createLauncher, detectPlatform, shareUrl, videoIdFromUrl } from './links.mjs?v=20261028-lecture';
 
 const byId = (id) => document.getElementById(id);
 const platform = detectPlatform(navigator);
+const videoId = videoIdFromUrl(window.location.href);
 const auto = byId('auto');
 const status = byId('status');
 const events = byId('events');
@@ -29,12 +30,13 @@ const launcher = createLauncher({
 
 byId('device').textContent = { android: 'Android', ios: 'iPhone / iPad', desktop: '컴퓨터 · 휴대폰에서 열어 주세요' }[platform];
 byId('desktop-note').hidden = platform !== 'desktop';
-byId('app-url').textContent = appUrl();
+byId('video-id').textContent = videoId ?? '잘못된 강의 주소';
+byId('app-url').textContent = videoId ? appUrl(videoId) : '강의 ID를 확인해 주세요.';
 byId('android-store').href = STORES.android;
 byId('ios-store').href = STORES.ios;
 byId('android-store').dataset.current = String(platform === 'android');
 byId('ios-store').dataset.current = String(platform === 'ios');
-openButton.disabled = connectButton.disabled = platform === 'desktop';
+openButton.disabled = connectButton.disabled = platform === 'desktop' || !videoId;
 openButton.querySelector('span').textContent = `${APP.name}에서 열기`;
 if (platform === 'ios') {
   byId('fallback-note').textContent = 'iPhone은 페이지가 계속 보이면 약 3초 뒤 App Store로 이동합니다. 앱 실행을 확인한 결과는 아닙니다.';
@@ -44,6 +46,12 @@ if (platform === 'ios') {
 
 auto.checked = new URL(window.location.href).searchParams.get('auto') === '1';
 function updateShareLink() {
+  if (!videoId) {
+    shareInput.value = window.location.href;
+    byId('copy').disabled = true;
+    status.textContent = '강의 ID가 올바르지 않습니다. 앱에서 공유한 링크를 다시 열어 주세요.';
+    return;
+  }
   const url = shareUrl(window.location.href, auto.checked);
   shareInput.value = url;
   byId('copy-status').textContent = '';
@@ -56,8 +64,8 @@ auto.addEventListener('change', () => {
   log(auto.checked ? '공유 링크에 자동 연결 시험을 켰습니다. 다음에 링크를 열 때 실행됩니다.' : '공유 링크의 자동 연결 시험을 껐습니다.');
 });
 
-openButton.addEventListener('click', () => launcher.launch(platform, false));
-connectButton.addEventListener('click', () => launcher.launch(platform, true));
+openButton.addEventListener('click', () => launcher.launch(platform, false, videoId));
+connectButton.addEventListener('click', () => launcher.launch(platform, true, videoId));
 cancelButton.addEventListener('click', () => launcher.cancel('스토어 자동 이동을 취소했습니다.'));
 for (const id of ['android-store', 'ios-store']) {
   byId(id).addEventListener('click', () => launcher.cancel('선택한 스토어로 직접 이동합니다.'));
@@ -92,6 +100,6 @@ byId('copy').addEventListener('click', async () => {
 });
 
 log('개발앱 전용 테스트 페이지를 준비했습니다.');
-if (auto.checked && document.visibilityState === 'visible') {
-  launcher.launch(platform, true);
+if (auto.checked && videoId && document.visibilityState === 'visible') {
+  launcher.launch(platform, true, videoId);
 }

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { STORES, appUrl, androidIntent, detectPlatform, shareUrl, createLauncher } from './links.mjs';
+import { STORES, DEFAULT_VIDEO_ID, appUrl, androidIntent, detectPlatform, shareUrl, createLauncher, videoIdFromUrl } from './links.mjs';
 
 function setup() {
   const navigated = [];
@@ -24,7 +24,7 @@ test('개발앱 실행만으로는 스토어 이동을 예약하지 않는다', 
   for (const platform of ['android', 'ios']) {
     const t = setup();
     t.launcher.launch(platform, false);
-    assert.deepEqual(t.navigated, ['hemily-dev://hemily.tlchealthcare.co.kr/hemily-dev-link/']);
+    assert.deepEqual(t.navigated, [`hemily-dev://hemily.tlchealthcare.co.kr/hemily-dev-link/classroom/videos/${DEFAULT_VIDEO_ID}`]);
     assert.equal(t.callbacks.length, 0);
   }
 });
@@ -102,6 +102,29 @@ test('모바일 기기와 데스크톱 모드 iPad를 구분한다', () => {
 
 test('복사 URL은 Pages 프로젝트 경로를 유지하며 미사용 파라미터와 fragment를 제거한다', () => {
   const input = 'https://goback.github.io/classroom/?app=prod&redirect=https%3A%2F%2Fevil.example#secret';
-  assert.equal(shareUrl(input, false), 'https://goback.github.io/classroom/');
-  assert.equal(shareUrl(input, true), 'https://goback.github.io/classroom/?auto=1');
+  assert.equal(shareUrl(input, false), `https://goback.github.io/classroom/?videoId=${DEFAULT_VIDEO_ID}`);
+  assert.equal(shareUrl(input, true), `https://goback.github.io/classroom/?videoId=${DEFAULT_VIDEO_ID}&auto=1`);
+});
+
+test('링크의 강의 ID를 앱 실행·Android Intent·복사 링크까지 그대로 전달한다', () => {
+  const id = '22222222-2222-4222-8222-222222222222';
+  const url = `https://goback.github.io/classroom/?videoId=${id}&auto=1`;
+  assert.equal(videoIdFromUrl(url), id);
+  assert.ok(appUrl(id).endsWith(`/classroom/videos/${id}`));
+  assert.ok(androidIntent(id).includes(`/classroom/videos/${id}#Intent;`));
+  assert.equal(shareUrl(url, true), url);
+  const t = setup();
+  t.launcher.launch('ios', false, id);
+  assert.deepEqual(t.navigated, [appUrl(id)]);
+});
+
+test('지정한 기본 강의를 사용하되 잘못되거나 중복된 ID로는 앱을 실행하지 않는다', () => {
+  assert.equal(videoIdFromUrl('https://goback.github.io/classroom/'), DEFAULT_VIDEO_ID);
+  for (const query of ['videoId=bad', `videoId=${DEFAULT_VIDEO_ID}&videoId=${DEFAULT_VIDEO_ID}`, 'videoId=']) {
+    assert.equal(videoIdFromUrl(`https://goback.github.io/classroom/?${query}`), null);
+  }
+  const t = setup();
+  t.launcher.launch('ios', true, 'bad');
+  assert.deepEqual(t.navigated, []);
+  assert.equal(t.callbacks.length, 0);
 });
