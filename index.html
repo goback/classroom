@@ -11,8 +11,8 @@
   <meta property="og:type" content="website">
   <title>해밀리 · 앱 연결 테스트</title>
   <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="styles.css?v=20261028-lecture">
-  <script type="module" src="app.mjs?v=20261028-lecture"></script>
+  <link rel="stylesheet" href="styles.css?v=20261028-auto-default">
+  <script type="module" src="app.mjs?v=20261028-auto-default"></script>
 </head>
 <body>
   <main>
@@ -20,7 +20,7 @@
       <div class="wordmark"><span class="mark" aria-hidden="true">H</span><span>해밀리헬스</span><span class="tag">연결 테스트</span></div>
       <p class="eyebrow">APP LINK TEST</p>
       <h1>앱으로 연결해 볼까요?</h1>
-      <p class="intro">휴대폰에서 앱 실행과 스토어 이동을<br class="mobile-break"> 각각 확인해 보세요.</p>
+      <p class="intro">휴대폰에서 앱 또는 스토어로 자동 연결합니다.<br>연결되지 않으면 아래 버튼으로 다시 시도해 주세요.</p>
     </header>
 
     <section class="card" aria-label="앱 연결 시험">
@@ -32,9 +32,9 @@
       <div class="device-row"><span>현재 기기</span><strong id="device">확인 중…</strong></div>
       <p id="desktop-note" class="device-note" hidden>휴대폰에서 아래 테스트 링크를 열면 앱 실행 버튼을 사용할 수 있습니다.</p>
 
-      <div class="section-label actions-title">02 <span>연결 확인</span></div>
+      <div class="section-label actions-title">02 <span>연결되지 않았나요?</span></div>
       <button type="button" id="open-app" class="button primary" disabled><span>앱에서 열기</span><span aria-hidden="true">↗</span></button>
-      <button type="button" id="connect" class="button secondary" disabled><span>앱 실행 + 스토어 전환 시험</span><span aria-hidden="true">→</span></button>
+      <button type="button" id="connect" class="button secondary" disabled><span>자동 연결 다시 시도</span><span aria-hidden="true">→</span></button>
       <p id="fallback-note" class="note">자동 전환 시험은 앱 설치 여부를 정확히 판별하는 기능이 아닙니다.</p>
       <button type="button" id="cancel" class="text-button" hidden>예약된 스토어 이동 취소</button>
 
@@ -42,14 +42,14 @@
         <a id="android-store" href="https://play.google.com/store/apps/details?id=com.hemilyHealth.app" class="store-link">Google Play <span aria-hidden="true">↗</span></a>
         <a id="ios-store" href="https://apps.apple.com/kr/app/id6804555560" class="store-link">App Store <span aria-hidden="true">↗</span></a>
       </div>
-      <p id="status" class="status" role="status" aria-live="polite">버튼을 눌러 연결을 확인해 주세요.</p>
+      <p id="status" class="status" role="status" aria-live="polite">앱 연결을 준비하고 있습니다.</p>
     </section>
 
     <section class="card share-card" aria-label="테스트 링크 공유">
       <div class="section-label">03 <span>다른 앱에서도 테스트</span></div>
       <p class="share-intro">링크를 복사해 메시지나 다른 앱에서 열어 보세요.</p>
-      <label class="toggle"><input type="checkbox" id="auto"><span>링크를 열면 자동 연결 시험</span></label>
-      <p class="note">켜면 페이지가 열릴 때 앱 실행과 스토어 전환을 시도합니다. 브라우저가 자동 실행을 막으면 버튼을 눌러 주세요.</p>
+      <label class="toggle"><input type="checkbox" id="auto" checked><span>링크를 열면 자동 연결</span></label>
+      <p class="note">기본으로 켜져 있습니다. 끄면 수동 시험용 링크를 만들 수 있습니다. 자동 실행이 막힌 경우에만 버튼을 눌러 주세요.</p>
       <label for="share-url" class="sr-only">공유할 테스트 주소</label>
       <input id="share-url" class="url-input" type="url" readonly spellcheck="false">
       <button type="button" id="copy" class="button secondary copy-button">테스트 링크 복사</button>

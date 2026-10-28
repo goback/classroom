@@ -12,6 +12,10 @@ export function videoIdFromUrl(currentUrl) {
   return ids.length === 1 && uuid.test(ids[0]) ? ids[0] : null;
 }
 
+export function autoFromUrl(currentUrl) {
+  return new URL(currentUrl).searchParams.get('auto') !== '0';
+}
+
 function videoPath(videoId) {
   if (!uuid.test(videoId ?? '')) throw new TypeError('Invalid video ID');
   return `${APP.path}classroom/videos/${videoId}`;
@@ -48,7 +52,7 @@ export function shareUrl(currentUrl, auto) {
   url.search = '';
   url.hash = '';
   url.searchParams.set('videoId', videoId);
-  if (auto) url.searchParams.set('auto', '1');
+  url.searchParams.set('auto', auto ? '1' : '0');
   return url.href;
 }
 

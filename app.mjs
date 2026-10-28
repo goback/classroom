@@ -1,4 +1,4 @@
-import { APP, STORES, appUrl, createLauncher, detectPlatform, shareUrl, videoIdFromUrl } from './links.mjs?v=20261028-lecture';
+import { APP, STORES, appUrl, autoFromUrl, createLauncher, detectPlatform, shareUrl, videoIdFromUrl } from './links.mjs?v=20261028-auto-default';
 
 const byId = (id) => document.getElementById(id);
 const platform = detectPlatform(navigator);
@@ -44,7 +44,7 @@ if (platform === 'ios') {
   byId('fallback-note').textContent = '지원 브라우저에서 앱을 열 수 없으면 Google Play로 연결합니다. 브라우저의 실행 차단도 같은 결과일 수 있습니다.';
 }
 
-auto.checked = new URL(window.location.href).searchParams.get('auto') === '1';
+auto.checked = autoFromUrl(window.location.href);
 function updateShareLink() {
   if (!videoId) {
     shareInput.value = window.location.href;

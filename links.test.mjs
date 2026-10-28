@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { STORES, DEFAULT_VIDEO_ID, appUrl, androidIntent, detectPlatform, shareUrl, createLauncher, videoIdFromUrl } from './links.mjs';
+import { STORES, DEFAULT_VIDEO_ID, appUrl, androidIntent, autoFromUrl, detectPlatform, shareUrl, createLauncher, videoIdFromUrl } from './links.mjs';
 
 function setup() {
   const navigated = [];
@@ -102,8 +102,17 @@ test('모바일 기기와 데스크톱 모드 iPad를 구분한다', () => {
 
 test('복사 URL은 Pages 프로젝트 경로를 유지하며 미사용 파라미터와 fragment를 제거한다', () => {
   const input = 'https://goback.github.io/classroom/?app=prod&redirect=https%3A%2F%2Fevil.example#secret';
-  assert.equal(shareUrl(input, false), `https://goback.github.io/classroom/?videoId=${DEFAULT_VIDEO_ID}`);
+  assert.equal(shareUrl(input, false), `https://goback.github.io/classroom/?videoId=${DEFAULT_VIDEO_ID}&auto=0`);
   assert.equal(shareUrl(input, true), `https://goback.github.io/classroom/?videoId=${DEFAULT_VIDEO_ID}&auto=1`);
+});
+
+test('일반 링크도 자동 연결을 기본으로 사용하며 auto=0으로만 끌 수 있다', () => {
+  const base = `https://goback.github.io/classroom/?videoId=${DEFAULT_VIDEO_ID}`;
+  assert.equal(autoFromUrl(base), true);
+  assert.equal(autoFromUrl(base + '&auto=1'), true);
+  assert.equal(autoFromUrl(base + '&auto=0'), false);
+  assert.equal(autoFromUrl(shareUrl(base, false)), false);
+  assert.equal(autoFromUrl(shareUrl(base, true)), true);
 });
 
 test('링크의 강의 ID를 앱 실행·Android Intent·복사 링크까지 그대로 전달한다', () => {
