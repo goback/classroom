@@ -3,12 +3,10 @@ export const STORES = Object.freeze({
   ios: 'https://apps.apple.com/kr/app/id6804555560',
 });
 
-export const DEFAULT_VIDEO_ID = 'e9b2ebb8-6e7f-41ff-8ca4-c488730daf12';
 const uuid = /^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$/;
 
 export function videoIdFromUrl(currentUrl) {
   const ids = new URL(currentUrl).searchParams.getAll('videoId');
-  if (ids.length === 0) return DEFAULT_VIDEO_ID;
   return ids.length === 1 && uuid.test(ids[0]) ? ids[0] : null;
 }
 
@@ -36,11 +34,11 @@ export function detectPlatform({ userAgent = '', platform = '', maxTouchPoints =
   return 'desktop';
 }
 
-export function appUrl(videoId = DEFAULT_VIDEO_ID) {
+export function appUrl(videoId) {
   return `${APP.scheme}://${APP.host}${videoPath(videoId)}`;
 }
 
-export function androidIntent(videoId = DEFAULT_VIDEO_ID) {
+export function androidIntent(videoId) {
   return `intent://${APP.host}${videoPath(videoId)}#Intent;scheme=${APP.scheme};` +
     `package=${APP.packageName};S.browser_fallback_url=${encodeURIComponent(STORES.android)};end`;
 }
@@ -56,8 +54,8 @@ export function shareUrl(currentUrl, auto) {
   return url.href;
 }
 
-// The browser cannot prove app installation or launch success. Only an explicit
-// test action (or an opted-in auto=1 link) schedules an iOS store fallback.
+// The browser cannot prove app installation or launch success. Automatic
+// connection attempts schedule an iOS store fallback only for a valid video ID.
 export function createLauncher({ navigate, schedule, unschedule, visible, report, pending }) {
   let timer = null;
   let generation = 0;
@@ -73,7 +71,7 @@ export function createLauncher({ navigate, schedule, unschedule, visible, report
     if (message && wasActive) report(message);
   }
 
-  function launch(platform, fallback, videoId = DEFAULT_VIDEO_ID) {
+  function launch(platform, fallback, videoId) {
     cancel();
     if (!uuid.test(videoId ?? '')) {
       report('강의 ID가 올바르지 않습니다. 앱에서 공유한 링크를 다시 열어 주세요.');

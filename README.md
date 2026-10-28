@@ -6,7 +6,7 @@ GitHub Pages에서 개발앱 실행과 스토어 이동을 확인하는 정적 �
 
 - 기본 자동 연결: https://goback.github.io/classroom/?videoId=e9b2ebb8-6e7f-41ff-8ca4-c488730daf12
 - 수동 시험 전용: https://goback.github.io/classroom/?videoId=e9b2ebb8-6e7f-41ff-8ca4-c488730daf12&auto=0
-- `videoId`를 생략하면 위 강의를 기본값으로 사용합니다. 앱에서 공유한 다른 강의 ID도 같은 방식으로 전달합니다.
+- 위 ID는 테스트 링크의 예시입니다. 앱은 현재 강의 ID를 전달하고 페이지는 전달받은 `videoId`만 사용합니다. ID가 없거나 잘못되면 안내만 표시하며 앱 실행이나 자동 스토어 이동을 하지 않습니다.
 
 ## 준비할 것
 

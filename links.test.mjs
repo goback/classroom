@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { STORES, DEFAULT_VIDEO_ID, appUrl, androidIntent, autoFromUrl, detectPlatform, shareUrl, createLauncher, videoIdFromUrl } from './links.mjs';
+import { STORES, appUrl, androidIntent, autoFromUrl, detectPlatform, shareUrl, createLauncher, videoIdFromUrl } from './links.mjs';
+
+const TEST_VIDEO_ID = 'e9b2ebb8-6e7f-41ff-8ca4-c488730daf12';
 
 function setup() {
   const navigated = [];
@@ -23,17 +25,17 @@ function setup() {
 test('개발앱 실행만으로는 스토어 이동을 예약하지 않는다', () => {
   for (const platform of ['android', 'ios']) {
     const t = setup();
-    t.launcher.launch(platform, false);
-    assert.deepEqual(t.navigated, [`hemily-dev://hemily.tlchealthcare.co.kr/hemily-dev-link/classroom/videos/${DEFAULT_VIDEO_ID}`]);
+    t.launcher.launch(platform, false, TEST_VIDEO_ID);
+    assert.deepEqual(t.navigated, [`hemily-dev://hemily.tlchealthcare.co.kr/hemily-dev-link/classroom/videos/${TEST_VIDEO_ID}`]);
     assert.equal(t.callbacks.length, 0);
   }
 });
 
 test('Android 자동 시험은 개발앱 패키지와 인코딩된 운영 스토어 fallback만 사용한다', () => {
   const t = setup();
-  t.launcher.launch('android', true);
+  t.launcher.launch('android', true, TEST_VIDEO_ID);
   const url = t.navigated[0];
-  assert.equal(url, androidIntent());
+  assert.equal(url, androidIntent(TEST_VIDEO_ID));
   assert.ok(url.includes('scheme=hemily-dev;package=com.hemilyHealth.app.dev;'));
   const fallback = url.match(/S\.browser_fallback_url=([^;]+)/)[1];
   assert.equal(decodeURIComponent(fallback), STORES.android);
@@ -42,53 +44,53 @@ test('Android 자동 시험은 개발앱 패키지와 인코딩된 운영 스토
 
 test('iOS 자동 시험은 앱 실행 후 페이지가 보일 때만 3초 뒤 올바른 스토어로 이동한다', () => {
   const t = setup();
-  t.launcher.launch('ios', true);
-  assert.deepEqual(t.navigated, [appUrl()]);
+  t.launcher.launch('ios', true, TEST_VIDEO_ID);
+  assert.deepEqual(t.navigated, [appUrl(TEST_VIDEO_ID)]);
   assert.equal(t.callbacks[0].delay, 3000);
   t.callbacks[0].callback();
-  assert.deepEqual(t.navigated, [appUrl(), 'https://apps.apple.com/kr/app/id6804555560']);
+  assert.deepEqual(t.navigated, [appUrl(TEST_VIDEO_ID), 'https://apps.apple.com/kr/app/id6804555560']);
 });
 
 test('페이지 숨김은 이벤트 취소가 늦어져도 스토어로 보내지 않는다', () => {
   const t = setup();
-  t.launcher.launch('ios', true);
+  t.launcher.launch('ios', true, TEST_VIDEO_ID);
   t.hide();
   t.callbacks[0].callback();
-  assert.deepEqual(t.navigated, [appUrl()]);
+  assert.deepEqual(t.navigated, [appUrl(TEST_VIDEO_ID)]);
 });
 
 test('앱 전환/이탈/사용자 취소 뒤 늦게 완료된 타이머는 스토어로 보내지 않는다', () => {
   const t = setup();
-  t.launcher.launch('ios', true);
+  t.launcher.launch('ios', true, TEST_VIDEO_ID);
   t.launcher.cancel('취소');
   assert.deepEqual(t.cancelled, [1]);
   t.callbacks[0].callback();
-  assert.deepEqual(t.navigated, [appUrl()]);
+  assert.deepEqual(t.navigated, [appUrl(TEST_VIDEO_ID)]);
   assert.equal(t.pending.at(-1), false);
 });
 
 test('다시 시도하면 이전 시도의 타이머는 새 시도 중에도 무시한다', () => {
   const t = setup();
-  t.launcher.launch('ios', true);
-  t.launcher.launch('ios', true);
+  t.launcher.launch('ios', true, TEST_VIDEO_ID);
+  t.launcher.launch('ios', true, TEST_VIDEO_ID);
   t.callbacks[0].callback();
-  assert.deepEqual(t.navigated, [appUrl(), appUrl()]);
+  assert.deepEqual(t.navigated, [appUrl(TEST_VIDEO_ID), appUrl(TEST_VIDEO_ID)]);
   assert.equal(t.pending.at(-1), true);
   t.callbacks[1].callback();
-  assert.deepEqual(t.navigated, [appUrl(), appUrl(), STORES.ios]);
+  assert.deepEqual(t.navigated, [appUrl(TEST_VIDEO_ID), appUrl(TEST_VIDEO_ID), STORES.ios]);
 });
 
 test('앱 실행만 재시험하면 이전 자동 스토어 이동이 남지 않는다', () => {
   const t = setup();
-  t.launcher.launch('ios', true);
-  t.launcher.launch('ios', false);
+  t.launcher.launch('ios', true, TEST_VIDEO_ID);
+  t.launcher.launch('ios', false, TEST_VIDEO_ID);
   t.callbacks[0].callback();
-  assert.deepEqual(t.navigated, [appUrl(), appUrl()]);
+  assert.deepEqual(t.navigated, [appUrl(TEST_VIDEO_ID), appUrl(TEST_VIDEO_ID)]);
 });
 
 test('컴퓨터에서는 앱 실행과 자동 스토어 이동을 모두 하지 않는다', () => {
   const t = setup();
-  t.launcher.launch('desktop', true);
+  t.launcher.launch('desktop', true, TEST_VIDEO_ID);
   assert.deepEqual(t.navigated, []);
   assert.equal(t.callbacks.length, 0);
 });
@@ -101,13 +103,13 @@ test('모바일 기기와 데스크톱 모드 iPad를 구분한다', () => {
 });
 
 test('복사 URL은 Pages 프로젝트 경로를 유지하며 미사용 파라미터와 fragment를 제거한다', () => {
-  const input = 'https://goback.github.io/classroom/?app=prod&redirect=https%3A%2F%2Fevil.example#secret';
-  assert.equal(shareUrl(input, false), `https://goback.github.io/classroom/?videoId=${DEFAULT_VIDEO_ID}&auto=0`);
-  assert.equal(shareUrl(input, true), `https://goback.github.io/classroom/?videoId=${DEFAULT_VIDEO_ID}&auto=1`);
+  const input = `https://goback.github.io/classroom/?videoId=${TEST_VIDEO_ID}&app=prod&redirect=https%3A%2F%2Fevil.example#secret`;
+  assert.equal(shareUrl(input, false), `https://goback.github.io/classroom/?videoId=${TEST_VIDEO_ID}&auto=0`);
+  assert.equal(shareUrl(input, true), `https://goback.github.io/classroom/?videoId=${TEST_VIDEO_ID}&auto=1`);
 });
 
 test('일반 링크도 자동 연결을 기본으로 사용하며 auto=0으로만 끌 수 있다', () => {
-  const base = `https://goback.github.io/classroom/?videoId=${DEFAULT_VIDEO_ID}`;
+  const base = `https://goback.github.io/classroom/?videoId=${TEST_VIDEO_ID}`;
   assert.equal(autoFromUrl(base), true);
   assert.equal(autoFromUrl(base + '&auto=1'), true);
   assert.equal(autoFromUrl(base + '&auto=0'), false);
@@ -127,13 +129,16 @@ test('링크의 강의 ID를 앱 실행·Android Intent·복사 링크까지 그
   assert.deepEqual(t.navigated, [appUrl(id)]);
 });
 
-test('지정한 기본 강의를 사용하되 잘못되거나 중복된 ID로는 앱을 실행하지 않는다', () => {
-  assert.equal(videoIdFromUrl('https://goback.github.io/classroom/'), DEFAULT_VIDEO_ID);
-  for (const query of ['videoId=bad', `videoId=${DEFAULT_VIDEO_ID}&videoId=${DEFAULT_VIDEO_ID}`, 'videoId=']) {
+test('강의 ID가 없거나 잘못되거나 중복되면 앱을 실행하지 않는다', () => {
+  assert.equal(videoIdFromUrl('https://goback.github.io/classroom/'), null);
+  for (const query of ['videoId=bad', `videoId=${TEST_VIDEO_ID}&videoId=${TEST_VIDEO_ID}`, 'videoId=']) {
     assert.equal(videoIdFromUrl(`https://goback.github.io/classroom/?${query}`), null);
   }
   const t = setup();
   t.launcher.launch('ios', true, 'bad');
+  t.launcher.launch('ios', true);
+  assert.throws(() => appUrl(), TypeError);
+  assert.throws(() => androidIntent(), TypeError);
   assert.deepEqual(t.navigated, []);
   assert.equal(t.callbacks.length, 0);
 });

@@ -1,4 +1,4 @@
-import { APP, STORES, appUrl, autoFromUrl, createLauncher, detectPlatform, shareUrl, videoIdFromUrl } from './links.mjs?v=20261028-auto-default';
+import { APP, STORES, appUrl, autoFromUrl, createLauncher, detectPlatform, shareUrl, videoIdFromUrl } from './links.mjs?v=20261028-dynamic-id';
 
 const byId = (id) => document.getElementById(id);
 const platform = detectPlatform(navigator);
@@ -49,7 +49,7 @@ function updateShareLink() {
   if (!videoId) {
     shareInput.value = window.location.href;
     byId('copy').disabled = true;
-    status.textContent = '강의 ID가 올바르지 않습니다. 앱에서 공유한 링크를 다시 열어 주세요.';
+    status.textContent = '강의 정보가 없거나 올바르지 않습니다. 앱에서 공유한 강의 링크로 열어 주세요.';
     return;
   }
   const url = shareUrl(window.location.href, auto.checked);
