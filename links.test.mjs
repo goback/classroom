@@ -42,11 +42,11 @@ test('Android 자동 시험은 개발앱 패키지와 인코딩된 운영 스토
   assert.equal(t.callbacks.length, 0);
 });
 
-test('iOS 자동 시험은 앱 실행 후 페이지가 보일 때만 3초 뒤 올바른 스토어로 이동한다', () => {
+test('iOS 자동 시험은 앱 실행 후 페이지가 보일 때만 2초 뒤 올바른 스토어로 이동한다', () => {
   const t = setup();
   t.launcher.launch('ios', true, TEST_VIDEO_ID);
   assert.deepEqual(t.navigated, [appUrl(TEST_VIDEO_ID)]);
-  assert.equal(t.callbacks[0].delay, 3000);
+  assert.equal(t.callbacks[0].delay, 2000);
   t.callbacks[0].callback();
   assert.deepEqual(t.navigated, [appUrl(TEST_VIDEO_ID), 'https://apps.apple.com/kr/app/id6804555560']);
 });

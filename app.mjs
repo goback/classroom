@@ -1,4 +1,4 @@
-import { APP, STORES, appUrl, autoFromUrl, createLauncher, detectPlatform, shareUrl, videoIdFromUrl } from './links.mjs?v=20261028-clean-link';
+import { appUrl, autoFromUrl, createLauncher, detectPlatform, shareUrl, videoIdFromUrl } from './links.mjs?v=20261029-single-action';
 
 const byId = (id) => document.getElementById(id);
 const platform = detectPlatform(navigator);
@@ -7,7 +7,6 @@ const auto = byId('auto');
 const status = byId('status');
 const events = byId('events');
 const cancelButton = byId('cancel');
-const openButton = byId('open-app');
 const connectButton = byId('connect');
 const shareInput = byId('share-url');
 
@@ -32,14 +31,9 @@ byId('device').textContent = { android: 'Android', ios: 'iPhone / iPad', desktop
 byId('desktop-note').hidden = platform !== 'desktop';
 byId('video-id').textContent = videoId ?? '잘못된 강의 주소';
 byId('app-url').textContent = videoId ? appUrl(videoId) : '강의 ID를 확인해 주세요.';
-byId('android-store').href = STORES.android;
-byId('ios-store').href = STORES.ios;
-byId('android-store').dataset.current = String(platform === 'android');
-byId('ios-store').dataset.current = String(platform === 'ios');
-openButton.disabled = connectButton.disabled = platform === 'desktop' || !videoId;
-openButton.querySelector('span').textContent = `${APP.name}에서 열기`;
+connectButton.disabled = platform === 'desktop' || !videoId;
 if (platform === 'ios') {
-  byId('fallback-note').textContent = 'iPhone은 페이지가 계속 보이면 약 3초 뒤 App Store로 이동합니다. 앱 실행을 확인한 결과는 아닙니다.';
+  byId('fallback-note').textContent = 'iPhone은 페이지가 계속 보이면 약 2초 뒤 App Store로 이동합니다. 앱 실행을 확인한 결과는 아닙니다.';
 } else if (platform === 'android') {
   byId('fallback-note').textContent = '지원 브라우저에서 앱을 열 수 없으면 Google Play로 연결합니다. 브라우저의 실행 차단도 같은 결과일 수 있습니다.';
 }
@@ -64,12 +58,8 @@ auto.addEventListener('change', () => {
   log(auto.checked ? '공유 링크에 자동 연결 시험을 켰습니다. 다음에 링크를 열 때 실행됩니다.' : '공유 링크의 자동 연결 시험을 껐습니다.');
 });
 
-openButton.addEventListener('click', () => launcher.launch(platform, false, videoId));
 connectButton.addEventListener('click', () => launcher.launch(platform, true, videoId));
 cancelButton.addEventListener('click', () => launcher.cancel('스토어 자동 이동을 취소했습니다.'));
-for (const id of ['android-store', 'ios-store']) {
-  byId(id).addEventListener('click', () => launcher.cancel('선택한 스토어로 직접 이동합니다.'));
-}
 
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') {
@@ -80,7 +70,7 @@ window.addEventListener('pagehide', () => launcher.cancel());
 window.addEventListener('pageshow', (event) => {
   if (event.persisted) {
     launcher.cancel();
-    status.textContent = '테스트 페이지로 돌아왔습니다. 필요한 동작의 버튼을 다시 눌러 주세요.';
+    status.textContent = '테스트 페이지로 돌아왔습니다. 다시 연결하려면 ‘앱 열기 또는 설치하기’를 눌러 주세요.';
     log('페이지 복원 · 자동으로 재실행하지 않습니다.');
   }
 });
