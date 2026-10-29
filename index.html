@@ -10,16 +10,18 @@
   <meta property="og:description" content="공유받은 강의를 해밀리헬스 앱에서 확인하세요.">
   <meta property="og:type" content="website">
   <title>해밀리헬스 · 강의 보기</title>
-  <link rel="icon" type="image/png" href="hemily-logo.png">
-  <link rel="stylesheet" href="styles.css?v=20261029-minimal">
-  <script type="module" src="app.mjs?v=20261029-minimal"></script>
+  <link rel="icon" type="image/png" href="app-icon.png">
+  <link rel="stylesheet" href="styles.css?v=20261029-icon-delay">
+  <script type="module" src="app.mjs?v=20261029-icon-delay"></script>
 </head>
 <body>
   <main>
-    <img class="logo" src="hemily-logo.png" width="96" height="96" alt="">
+    <img class="logo" src="app-icon.png" width="96" height="96" alt="">
     <h1>해밀리헬스에서<br>강의를 확인하세요</h1>
     <p id="message" role="status" aria-live="polite">앱이 없으면 설치 화면으로 연결됩니다.</p>
-    <button id="connect" type="button" disabled>앱에서 강의 보기</button>
+    <div class="action">
+      <button id="connect" type="button" hidden disabled>앱에서 강의 보기</button>
+    </div>
     <noscript><p>브라우저에서 JavaScript를 허용한 뒤 다시 열어주세요.</p></noscript>
   </main>
 </body>

@@ -1,8 +1,60 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { STORES, appUrl, androidIntent, autoFromUrl, detectPlatform, shareUrl, createLauncher, videoIdFromUrl } from './links.mjs';
+import { STORES, appUrl, androidIntent, autoFromUrl, detectPlatform, shareUrl, createDelayedReveal, createLauncher, videoIdFromUrl } from './links.mjs';
 
 const TEST_VIDEO_ID = 'e9b2ebb8-6e7f-41ff-8ca4-c488730daf12';
+
+function setupReveal() {
+  const callbacks = [];
+  const cancelled = [];
+  let shown = true;
+  let isVisible = true;
+  const reveal = createDelayedReveal({
+    schedule: (callback, delay) => {
+      callbacks.push({ callback, delay });
+      return callbacks.length;
+    },
+    unschedule: (id) => cancelled.push(id),
+    visible: () => isVisible,
+    setShown: (value) => { shown = value; },
+  });
+  return {
+    reveal, callbacks, cancelled,
+    shown: () => shown,
+    hide: () => { isVisible = false; },
+  };
+}
+
+test('연결 버튼은 즉시 숨겨지고 2초 대기가 끝난 뒤 표시된다', () => {
+  const t = setupReveal();
+  t.reveal.start();
+  assert.equal(t.shown(), false);
+  assert.equal(t.callbacks[0].delay, 2000);
+  t.callbacks[0].callback();
+  assert.equal(t.shown(), true);
+});
+
+test('앱 전환 중 늦게 끝난 표시 예약은 버튼을 드러내지 않는다', () => {
+  const t = setupReveal();
+  t.reveal.start();
+  t.hide();
+  t.callbacks[0].callback();
+  assert.equal(t.shown(), false);
+  t.reveal.start();
+  assert.equal(t.callbacks.length, 1);
+});
+
+test('페이지를 떠나고 다시 시작하면 이전 예약이 버튼을 일찍 표시하지 않는다', () => {
+  const t = setupReveal();
+  t.reveal.start();
+  t.reveal.cancel();
+  t.reveal.start();
+  assert.deepEqual(t.cancelled, [1]);
+  t.callbacks[0].callback();
+  assert.equal(t.shown(), false);
+  t.callbacks[1].callback();
+  assert.equal(t.shown(), true);
+});
 
 function setup() {
   const navigated = [];

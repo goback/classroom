@@ -54,6 +54,33 @@ export function shareUrl(currentUrl, auto) {
   return url.href;
 }
 
+// Keep the recovery action out of focus and hit-testing while automatic
+// navigation starts. Old callbacks must not reveal it early after a return.
+export function createDelayedReveal({ schedule, unschedule, visible, setShown }) {
+  let timer = null;
+  let generation = 0;
+
+  function cancel() {
+    generation += 1;
+    if (timer !== null) unschedule(timer);
+    timer = null;
+    setShown(false);
+  }
+
+  function start() {
+    cancel();
+    if (!visible()) return;
+    const ownGeneration = generation;
+    timer = schedule(() => {
+      if (generation !== ownGeneration) return;
+      timer = null;
+      if (visible()) setShown(true);
+    }, 2000);
+  }
+
+  return { start, cancel };
+}
+
 // The browser cannot prove app installation or launch success. Automatic
 // connection attempts schedule an iOS store fallback only for a valid video ID.
 export function createLauncher({ navigate, schedule, unschedule, visible, report, pending }) {

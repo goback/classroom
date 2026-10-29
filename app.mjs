@@ -1,9 +1,16 @@
-import { autoFromUrl, createLauncher, detectPlatform, shareUrl, videoIdFromUrl } from './links.mjs?v=20261029-minimal';
+import { autoFromUrl, createDelayedReveal, createLauncher, detectPlatform, shareUrl, videoIdFromUrl } from './links.mjs?v=20261029-icon-delay';
 
 const platform = detectPlatform(navigator);
 const videoId = videoIdFromUrl(window.location.href);
 const message = document.getElementById('message');
 const connectButton = document.getElementById('connect');
+
+const buttonReveal = createDelayedReveal({
+  schedule: (callback, delay) => window.setTimeout(callback, delay),
+  unschedule: (timer) => window.clearTimeout(timer),
+  visible: () => document.visibilityState === 'visible',
+  setShown: (shown) => { connectButton.hidden = !shown; },
+});
 
 const launcher = createLauncher({
   navigate: (url) => { window.location.href = url; },
@@ -29,17 +36,27 @@ if (videoId) {
 connectButton.addEventListener('click', () => launcher.launch(platform, true, videoId));
 
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'hidden') launcher.cancel();
+  if (document.visibilityState === 'hidden') {
+    launcher.cancel();
+    buttonReveal.cancel();
+  } else {
+    buttonReveal.start();
+  }
 });
-window.addEventListener('pagehide', () => launcher.cancel());
+window.addEventListener('pagehide', () => {
+  launcher.cancel();
+  buttonReveal.cancel();
+});
 window.addEventListener('pageshow', (event) => {
   if (!event.persisted) return;
   launcher.cancel();
+  buttonReveal.start();
   if (videoId && platform !== 'desktop') {
     message.textContent = '연결되지 않으면 아래 버튼을 눌러주세요.';
   }
 });
 
+buttonReveal.start();
 if (autoFromUrl(window.location.href) && videoId && document.visibilityState === 'visible') {
   launcher.launch(platform, true, videoId);
 }
