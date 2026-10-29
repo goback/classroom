@@ -20,8 +20,8 @@ main {
 }
 .logo { display: block; object-fit: contain; }
 h1 {
-  margin: 28px 0 12px;
-  font-size: 25px;
+  margin: 28px 0 8px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1.45;
   letter-spacing: -.035em;
@@ -30,12 +30,14 @@ h1 {
 p {
   margin: 0;
   color: #667085;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.7;
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
-.action { width: 100%; min-height: 56px; margin-top: 28px; }
+#heading[hidden], #message[hidden] { display: block; visibility: hidden; }
+.action { display: grid; gap: 12px; width: 100%; min-height: 56px; margin-top: 28px; }
+.ios .action { min-height: 124px; }
 button {
   width: 100%;
   min-height: 56px;
@@ -56,3 +58,8 @@ button:hover:not(:disabled) { background: #203f7e; }
 button:active:not(:disabled) { background: #1b356a; }
 button:focus-visible { outline: 3px solid #80a7ea; outline-offset: 4px; }
 noscript p { margin-top: 20px; }
+
+.ios #connect { border: 1px solid #264c97; color: #264c97; background: #fff; }
+.ios #connect:hover:not(:disabled) { background: #f3f6fc; }
+.ios #connect:active:not(:disabled) { background: #e7edf8; }
+.ios #connect:disabled { border-color: #e4e9f0; background: #eef1f6; color: #667085; }

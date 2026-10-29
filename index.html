@@ -11,16 +11,17 @@
   <meta property="og:type" content="website">
   <title>해밀리헬스 · 강의 보기</title>
   <link rel="icon" type="image/png" href="app-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261029-icon-delay">
-  <script type="module" src="app.mjs?v=20261029-icon-delay"></script>
+  <link rel="stylesheet" href="styles.css?v=20261029-ios-manual">
+  <script type="module" src="app.mjs?v=20261029-ios-manual"></script>
 </head>
 <body>
   <main>
-    <img class="logo" src="app-icon.png" width="96" height="96" alt="">
-    <h1>해밀리헬스에서<br>강의를 확인하세요</h1>
-    <p id="message" role="status" aria-live="polite">앱이 없으면 설치 화면으로 연결됩니다.</p>
+    <img class="logo" src="app-icon.png" width="96" height="96" alt="해밀리헬스">
+    <h1 id="heading" hidden>해밀리헬스 앱으로 이동중이에요</h1>
+    <p id="message" role="status" aria-live="polite" hidden>자동으로 연결이 안되면 아래 버튼을 눌러주세요</p>
     <div class="action">
       <button id="connect" type="button" hidden disabled>앱에서 강의 보기</button>
+      <button id="install" type="button" hidden disabled>앱 설치하기</button>
     </div>
     <noscript><p>브라우저에서 JavaScript를 허용한 뒤 다시 열어주세요.</p></noscript>
   </main>

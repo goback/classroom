@@ -81,58 +81,21 @@ export function createDelayedReveal({ schedule, unschedule, visible, setShown })
   return { start, cancel };
 }
 
-// The browser cannot prove app installation or launch success. Automatic
-// connection attempts schedule an iOS store fallback only for a valid video ID.
-export function createLauncher({ navigate, schedule, unschedule, visible, report, pending }) {
-  let timer = null;
-  let generation = 0;
-  let active = false;
-
-  function cancel(message) {
-    generation += 1;
-    if (timer !== null) unschedule(timer);
-    timer = null;
-    pending(false);
-    const wasActive = active;
-    active = false;
-    if (message && wasActive) report(message);
-  }
-
+// Android uses the browser's Intent fallback. iOS only requests the app:
+// a system confirmation can remain open indefinitely, so no store timer runs.
+export function createLauncher({ navigate, report }) {
   function launch(platform, fallback, videoId) {
-    cancel();
     if (!uuid.test(videoId ?? '')) {
       report('강의 링크를 확인하고 다시 열어주세요.');
       return;
     }
-    if (platform !== 'android' && platform !== 'ios') {
-      report('휴대폰에서 이 링크를 열어주세요.');
-      return;
-    }
-    active = true;
-    report(fallback
-      ? '앱이 없으면 설치 화면으로 연결됩니다.'
-      : '연결되지 않으면 아래 버튼을 눌러주세요.');
-
-    if (platform === 'ios' && fallback) {
-      const ownGeneration = generation;
-      pending(true);
-      timer = schedule(() => {
-        if (generation !== ownGeneration || !active) return;
-        timer = null;
-        pending(false);
-        if (!visible()) { active = false; return; }
-        active = false;
-        report('설치 화면으로 이동합니다.');
-        navigate(STORES.ios);
-      }, 2000);
-    }
+    if (platform !== 'android' && platform !== 'ios') return;
     try {
       navigate(platform === 'android' && fallback ? androidIntent(videoId) : appUrl(videoId));
     } catch {
-      cancel();
       report('연결되지 않으면 외부 브라우저에서 다시 열어주세요.');
     }
   }
 
-  return { launch, cancel };
+  return { launch };
 }
