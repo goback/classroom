@@ -74,19 +74,17 @@ export function createLauncher({ navigate, schedule, unschedule, visible, report
   function launch(platform, fallback, videoId) {
     cancel();
     if (!uuid.test(videoId ?? '')) {
-      report('강의 ID가 올바르지 않습니다. 앱에서 공유한 링크를 다시 열어 주세요.');
+      report('강의 링크를 확인하고 다시 열어주세요.');
       return;
     }
     if (platform !== 'android' && platform !== 'ios') {
-      report('휴대폰에서 이 링크를 열어 주세요. 연결 버튼으로 앱 실행과 스토어 이동을 시도할 수 있습니다.');
+      report('휴대폰에서 이 링크를 열어주세요.');
       return;
     }
     active = true;
     report(fallback
-      ? (platform === 'ios'
-        ? '앱 실행을 요청합니다. 페이지가 계속 보이면 약 2초 뒤 App Store로 이동합니다.'
-        : '앱 실행을 요청합니다. 지원 브라우저는 실행할 수 없을 때 Google Play로 연결합니다.')
-      : '앱 실행을 요청했습니다. 앱이 열리지 않으면 설치 여부와 브라우저 안내를 확인해 주세요.');
+      ? '앱이 없으면 설치 화면으로 연결됩니다.'
+      : '연결되지 않으면 아래 버튼을 눌러주세요.');
 
     if (platform === 'ios' && fallback) {
       const ownGeneration = generation;
@@ -97,7 +95,7 @@ export function createLauncher({ navigate, schedule, unschedule, visible, report
         pending(false);
         if (!visible()) { active = false; return; }
         active = false;
-        report('페이지가 계속 보여 App Store로 이동합니다. 앱 미설치를 확인한 결과는 아닙니다.');
+        report('설치 화면으로 이동합니다.');
         navigate(STORES.ios);
       }, 2000);
     }
@@ -105,7 +103,7 @@ export function createLauncher({ navigate, schedule, unschedule, visible, report
       navigate(platform === 'android' && fallback ? androidIntent(videoId) : appUrl(videoId));
     } catch {
       cancel();
-      report('브라우저가 앱 실행을 허용하지 않았습니다. ‘앱 열기 또는 설치하기’를 다시 누르거나 외부 브라우저에서 열어 주세요.');
+      report('연결되지 않으면 외부 브라우저에서 다시 열어주세요.');
     }
   }
 

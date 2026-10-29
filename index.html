@@ -5,60 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <meta name="referrer" content="no-referrer">
-  <meta name="description" content="해밀리 앱 실행과 스토어 이동을 휴대폰에서 확인하는 테스트 페이지입니다.">
-  <meta property="og:title" content="해밀리 앱 연결 테스트">
-  <meta property="og:description" content="해밀리 Dev 실행과 스토어 이동을 확인해 보세요.">
+  <meta name="description" content="공유받은 강의를 해밀리헬스 앱에서 확인하세요.">
+  <meta property="og:title" content="해밀리헬스 강의">
+  <meta property="og:description" content="공유받은 강의를 해밀리헬스 앱에서 확인하세요.">
   <meta property="og:type" content="website">
-  <title>해밀리 · 앱 연결 테스트</title>
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="styles.css?v=20261029-single-action">
-  <script type="module" src="app.mjs?v=20261029-single-action"></script>
+  <title>해밀리헬스 · 강의 보기</title>
+  <link rel="icon" type="image/png" href="hemily-logo.png">
+  <link rel="stylesheet" href="styles.css?v=20261029-minimal">
+  <script type="module" src="app.mjs?v=20261029-minimal"></script>
 </head>
 <body>
   <main>
-    <header>
-      <div class="wordmark"><span class="mark" aria-hidden="true">H</span><span>해밀리헬스</span><span class="tag">연결 테스트</span></div>
-      <p class="eyebrow">APP LINK TEST</p>
-      <h1>앱으로 연결해 볼까요?</h1>
-      <p class="intro">휴대폰에서 앱 또는 스토어로 자동 연결합니다.<br>연결되지 않으면 아래 버튼으로 다시 시도해 주세요.</p>
-    </header>
-
-    <section class="card" aria-label="앱 연결 시험">
-      <div class="section-label">01 <span>테스트할 앱</span></div>
-      <div class="dev-app"><span><strong>해밀리 Dev</strong><small>휴대폰에 설치한 개발용 앱</small></span><span class="dev-badge">DEV</span></div>
-      <p id="app-note" class="note">개발앱은 스토어에 없습니다. 설치 화면은 운영 해밀리헬스로 연결됩니다.</p>
-      <p class="video-target">전달받은 강의 ID<br><code id="video-id">확인 중…</code></p>
-
-      <div class="device-row"><span>현재 기기</span><strong id="device">확인 중…</strong></div>
-      <p id="desktop-note" class="device-note" hidden>휴대폰에서 아래 테스트 링크를 열면 앱 실행 버튼을 사용할 수 있습니다.</p>
-
-      <div class="section-label actions-title">02 <span>연결되지 않았나요?</span></div>
-      <button type="button" id="connect" class="button primary" disabled><span>앱 열기 또는 설치하기</span><span aria-hidden="true">↗</span></button>
-      <p id="fallback-note" class="note">자동 전환 시험은 앱 설치 여부를 정확히 판별하는 기능이 아닙니다.</p>
-      <button type="button" id="cancel" class="text-button" hidden>예약된 스토어 이동 취소</button>
-
-      <p id="status" class="status" role="status" aria-live="polite">앱 연결을 준비하고 있습니다.</p>
-    </section>
-
-    <section class="card share-card" aria-label="테스트 링크 공유">
-      <div class="section-label">03 <span>다른 앱에서도 테스트</span></div>
-      <p class="share-intro">링크를 복사해 메시지나 다른 앱에서 열어 보세요.</p>
-      <label class="toggle"><input type="checkbox" id="auto" checked><span>링크를 열면 자동 연결</span></label>
-      <p class="note">기본으로 켜져 있습니다. 끄면 수동 시험용 링크를 만들 수 있습니다. 자동 실행이 막힌 경우에만 버튼을 눌러 주세요.</p>
-      <label for="share-url" class="sr-only">공유할 테스트 주소</label>
-      <input id="share-url" class="url-input" type="url" readonly spellcheck="false">
-      <button type="button" id="copy" class="button secondary copy-button">테스트 링크 복사</button>
-      <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
-    </section>
-
-    <details class="details">
-      <summary>테스트 범위와 연결 기록</summary>
-      <p>최신 개발앱에서 위 강의 ID의 상세 화면을 엽니다. 로그인이나 가입이 필요하면 완료 후 강의로 이동합니다. 강의가 삭제되거나 비공개이면 앱에서 볼 수 없음 안내가 나타납니다. HTTPS 주소를 OS가 직접 앱으로 여는 연결은 이번 페이지에 추가하지 않았습니다.</p>
-      <p>자동 연결과 ‘앱 열기 또는 설치하기’ 버튼은 같은 동작을 수행합니다. Android 지원 브라우저는 앱을 열 수 없으면 Google Play로 연결합니다. iPhone은 페이지가 계속 보일 때 약 2초 뒤 App Store로 이동합니다. 실행 확인창에서 기다리거나 브라우저가 실행을 막아도 스토어로 갈 수 있습니다.</p>
-      <dl><dt>앱 실행 주소</dt><dd><code id="app-url"></code></dd><dt>연결 기록</dt><dd><ol id="events" class="event-log"></ol></dd></dl>
-    </details>
-    <footer>해밀리헬스 · 앱 실행 및 스토어 연결 시험</footer>
-    <noscript><p class="status">앱 자동 연결에는 JavaScript가 필요합니다. <a href="https://play.google.com/store/apps/details?id=com.hemilyHealth.app">Google Play</a> 또는 <a href="https://apps.apple.com/kr/app/id6804555560">App Store</a>에서 해밀리헬스를 확인할 수 있습니다.</p></noscript>
+    <img class="logo" src="hemily-logo.png" width="96" height="96" alt="">
+    <h1>해밀리헬스에서<br>강의를 확인하세요</h1>
+    <p id="message" role="status" aria-live="polite">앱이 없으면 설치 화면으로 연결됩니다.</p>
+    <button id="connect" type="button" disabled>앱에서 강의 보기</button>
+    <noscript><p>브라우저에서 JavaScript를 허용한 뒤 다시 열어주세요.</p></noscript>
   </main>
 </body>
 </html>
