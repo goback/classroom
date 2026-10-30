@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light">
   <meta name="referrer" content="no-referrer">
   <meta name="description" content="공유받은 강의를 해밀리헬스 앱에서 확인하세요.">
@@ -11,16 +11,20 @@
   <meta property="og:type" content="website">
   <title>해밀리헬스 · 강의 보기</title>
   <link rel="icon" type="image/png" href="app-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261030-initial-heading">
-  <script type="module" src="app.mjs?v=20261030-initial-heading"></script>
+  <link rel="stylesheet" href="styles.css?v=20261030-figma">
+  <script type="module" src="app.mjs?v=20261030-figma"></script>
 </head>
 <body>
   <main>
-    <img class="logo" src="app-icon.png" width="96" height="96" alt="해밀리헬스">
-    <h1 id="heading">해밀리헬스 앱으로 이동중이에요</h1>
-    <p id="message" role="status" aria-live="polite" hidden>자동으로 연결이 안되면 아래 버튼을 눌러주세요</p>
+    <section class="intro" aria-label="앱 연결 안내">
+      <div class="logo-slot"><img class="logo" src="hemily-symbol.svg" alt="해밀리헬스"></div>
+      <h1 id="heading">해밀리헬스 앱으로
+이동합니다</h1>
+      <p id="message" role="status" aria-live="polite" hidden>앱이 열리지 않으면
+아래 버튼을 눌러 주세요</p>
+    </section>
     <div class="action">
-      <button id="connect" type="button" hidden disabled>앱에서 강의 보기</button>
+      <button id="connect" type="button" hidden disabled>앱으로 이동하기</button>
       <button id="install" type="button" hidden disabled>앱 설치하기</button>
     </div>
     <noscript><p>브라우저에서 JavaScript를 허용한 뒤 다시 열어주세요.</p></noscript>

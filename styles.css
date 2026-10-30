@@ -1,65 +1,105 @@
+@font-face {
+  font-family: "Pretendard";
+  src: url("fonts/Pretendard-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("fonts/Pretendard-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pretendard";
+  src: url("fonts/Pretendard-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-  color: #19283e;
+  --brand: #0033a1;
+  --text-primary: #101111;
+  --text-secondary: #424348;
+  --tonal: #efeff0;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+  color: var(--text-primary);
   background: #fff;
   font-synthesis: none;
 }
 * { box-sizing: border-box; }
 body { margin: 0; }
 main {
+  position: relative;
+  width: min(100%, 480px);
+  min-height: 100vh;
+  min-height: max(100svh, 480px);
+  margin: 0 auto;
+  text-align: center;
+}
+.intro {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: min(100%, 400px);
-  min-height: 100vh;
-  min-height: 100svh;
-  margin: 0 auto;
-  padding: 48px 24px;
-  text-align: center;
+  min-height: calc(100vh - 80px);
+  min-height: calc(max(100svh, 480px) - 80px - env(safe-area-inset-bottom, 0px));
+  padding: 0 16px;
 }
-.logo { display: block; object-fit: contain; }
+.logo-slot { position: relative; width: 64px; height: 66px; flex: 0 0 66px; }
+.logo { position: absolute; display: block; left: 0; top: .3px; }
 h1 {
-  margin: 28px 0 8px;
-  font-size: 20px;
+  width: 100%;
+  margin: 32px 0 12px;
+  font-size: 24px;
   font-weight: 700;
-  line-height: 1.45;
-  letter-spacing: -.035em;
+  line-height: 34px;
+  white-space: pre-line;
   word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 p {
+  width: 100%;
   margin: 0;
-  color: #667085;
-  font-size: 14px;
-  line-height: 1.7;
+  color: var(--text-secondary);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 30px;
+  white-space: pre-line;
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
 #message[hidden] { display: block; visibility: hidden; }
-.action { display: grid; gap: 12px; width: 100%; min-height: 56px; margin-top: 28px; }
-.ios .action { min-height: 124px; }
+.action {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  left: 16px;
+  display: grid;
+  gap: 4px;
+  min-height: 64px;
+}
+.ios .action { min-height: 132px; }
 button {
   width: 100%;
-  min-height: 56px;
-  padding: 15px 20px;
+  min-height: 64px;
+  padding: 16px 10px;
   border: 0;
   border-radius: 12px;
-  background: #264c97;
+  background: var(--brand);
   color: #fff;
   font: inherit;
-  font-size: 16px;
-  font-weight: 650;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 32px;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-button:disabled { background: #eef1f6; color: #667085; cursor: default; }
-button:hover:not(:disabled) { background: #203f7e; }
-button:active:not(:disabled) { background: #1b356a; }
-button:focus-visible { outline: 3px solid #80a7ea; outline-offset: 4px; }
-noscript p { margin-top: 20px; }
-
-.ios #connect { border: 1px solid #264c97; color: #264c97; background: #fff; }
-.ios #connect:hover:not(:disabled) { background: #f3f6fc; }
-.ios #connect:active:not(:disabled) { background: #e7edf8; }
-.ios #connect:disabled { border-color: #e4e9f0; background: #eef1f6; color: #667085; }
+button:disabled { background: #ccd6ec; cursor: default; }
+button:hover:not(:disabled) { filter: brightness(.96); }
+button:active:not(:disabled) { transform: scale(.98); }
+button:focus-visible { outline: 3px solid #80a7ea; outline-offset: 3px; }
+#install { color: var(--text-primary); background: var(--tonal); }
+#install:disabled { color: #797b83; }
+noscript p { padding: 16px; font-size: 16px; line-height: 24px; }

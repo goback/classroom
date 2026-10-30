@@ -76,8 +76,8 @@ test('iOS는 제목을 즉시 표시하고 아래 안내와 두 버튼만 2초 �
   for (const id of ['message', 'connect', 'install']) assert.equal(t.elements[id].hidden, true);
   t.advance(1);
   for (const element of Object.values(t.elements)) assert.equal(element.hidden, false);
-  assert.equal(t.elements.heading.textContent, '해밀리헬스 앱으로 이동중이에요');
-  assert.equal(t.elements.message.textContent, '자동으로 연결이 안되면 아래 버튼을 눌러주세요');
+  assert.equal(t.elements.heading.textContent, '해밀리헬스 앱에서\n강의를 볼 수 있어요');
+  assert.equal(t.elements.message.textContent, '앱이 없으면 설치 후 볼 수 있어요');
   t.advance(60000);
   assert.deepEqual(t.navigated, [appUrl(VIDEO_ID)]);
 });
@@ -95,6 +95,9 @@ test('iOS 앱 열기는 스토어로 보내지 않고 설치 버튼을 누른 �
 test('Android는 기존 Intent와 스토어 fallback을 사용하며 버튼 하나만 표시한다', () => {
   const t = setup('android');
   assert.deepEqual(t.navigated, [androidIntent(VIDEO_ID)]);
+  assert.equal(t.elements.heading.textContent, '해밀리헬스 앱으로\n이동합니다');
+  assert.equal(t.elements.message.textContent, '앱이 열리지 않으면\n아래 버튼을 눌러 주세요');
+  assert.equal(t.elements.connect.textContent, '앱으로 이동하기');
   assert.equal(t.elements.heading.hidden, false);
   assert.equal(t.elements.message.hidden, true);
   assert.equal(t.elements.connect.hidden, true);
@@ -151,7 +154,7 @@ test('PC도 요청한 문구만 표시하고 앱 연결 버튼은 비활성 상�
   const t = setup('desktop');
   t.advance(2000);
   assert.equal(t.elements.heading.hidden, false);
-  assert.equal(t.elements.message.textContent, '자동으로 연결이 안되면 아래 버튼을 눌러주세요');
+  assert.equal(t.elements.message.textContent, '앱이 열리지 않으면\n아래 버튼을 눌러 주세요');
   assert.equal(t.elements.connect.disabled, true);
   assert.equal(t.elements.install.hidden, true);
   assert.deepEqual(t.navigated, []);

@@ -10,6 +10,10 @@ export function initializePage({ window, document, navigator, navigate }) {
   const connectButton = document.getElementById('connect');
   const installButton = document.getElementById('install');
   document.documentElement.classList.toggle('ios', isIOS);
+  if (isIOS) {
+    heading.textContent = '해밀리헬스 앱에서\n강의를 볼 수 있어요';
+    message.textContent = '앱이 없으면 설치 후 볼 수 있어요';
+  }
 
   const buttonReveal = createDelayedReveal({
     schedule: (callback, delay) => window.setTimeout(callback, delay),
