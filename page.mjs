@@ -19,7 +19,6 @@ export function initializePage({ window, document, navigator, navigate }) {
       connectButton.hidden = !shown;
       installButton.hidden = !shown || !isIOS;
       if (videoId) {
-        heading.hidden = !shown;
         message.hidden = !shown;
       }
     },

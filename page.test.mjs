@@ -65,13 +65,15 @@ function setup(platform, query = `videoId=${VIDEO_ID}`) {
   return { elements, document, events, classes, navigated, tasks, advance };
 }
 
-test('iOS는 앱 실행만 자동 요청하고 두 문구와 두 버튼은 2초 뒤 함께 표시한다', () => {
+test('iOS는 제목을 즉시 표시하고 아래 안내와 두 버튼만 2초 뒤 함께 표시한다', () => {
   const t = setup('ios');
   assert.ok(t.classes.has('ios'));
   assert.deepEqual(t.navigated, [appUrl(VIDEO_ID)]);
-  for (const element of Object.values(t.elements)) assert.equal(element.hidden, true);
+  assert.equal(t.elements.heading.hidden, false);
+  for (const id of ['message', 'connect', 'install']) assert.equal(t.elements[id].hidden, true);
   t.advance(1999);
-  for (const element of Object.values(t.elements)) assert.equal(element.hidden, true);
+  assert.equal(t.elements.heading.hidden, false);
+  for (const id of ['message', 'connect', 'install']) assert.equal(t.elements[id].hidden, true);
   t.advance(1);
   for (const element of Object.values(t.elements)) assert.equal(element.hidden, false);
   assert.equal(t.elements.heading.textContent, '해밀리헬스 앱으로 이동중이에요');
@@ -93,7 +95,15 @@ test('iOS 앱 열기는 스토어로 보내지 않고 설치 버튼을 누른 �
 test('Android는 기존 Intent와 스토어 fallback을 사용하며 버튼 하나만 표시한다', () => {
   const t = setup('android');
   assert.deepEqual(t.navigated, [androidIntent(VIDEO_ID)]);
-  t.advance(2000);
+  assert.equal(t.elements.heading.hidden, false);
+  assert.equal(t.elements.message.hidden, true);
+  assert.equal(t.elements.connect.hidden, true);
+  t.advance(1999);
+  assert.equal(t.elements.heading.hidden, false);
+  assert.equal(t.elements.message.hidden, true);
+  assert.equal(t.elements.connect.hidden, true);
+  t.advance(1);
+  assert.equal(t.elements.message.hidden, false);
   assert.equal(t.elements.connect.hidden, false);
   assert.equal(t.elements.install.hidden, true);
   t.elements.connect.click();
@@ -105,11 +115,13 @@ test('페이지 복원은 자동 실행을 반복하지 않고 문구·버튼의
   t.document.visibilityState = 'hidden';
   t.events.document.get('visibilitychange')();
   t.advance(10000);
+  assert.equal(t.elements.heading.hidden, false);
   assert.equal(t.elements.install.hidden, true);
   t.document.visibilityState = 'visible';
   t.events.document.get('visibilitychange')();
   t.events.window.get('pageshow')({ persisted: true });
   t.advance(1999);
+  assert.equal(t.elements.heading.hidden, false);
   assert.equal(t.elements.install.hidden, true);
   t.advance(1);
   assert.equal(t.elements.install.hidden, false);

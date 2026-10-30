@@ -35,7 +35,7 @@ p {
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
-#heading[hidden], #message[hidden] { display: block; visibility: hidden; }
+#message[hidden] { display: block; visibility: hidden; }
 .action { display: grid; gap: 12px; width: 100%; min-height: 56px; margin-top: 28px; }
 .ios .action { min-height: 124px; }
 button {

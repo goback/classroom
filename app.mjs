@@ -1,3 +1,3 @@
-import { initializePage } from './page.mjs?v=20261029-ios-manual';
+import { initializePage } from './page.mjs?v=20261030-initial-heading';
 
 initializePage({ window, document, navigator });
